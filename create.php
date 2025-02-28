@@ -38,7 +38,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <?php endforeach; ?>
             </ul>
         </div>
-        <?php unset($_SESSION['errors']); // Limpa os erros da sessão ?>
+        <?php unset($_SESSION['errors']); ?>
     <?php endif; ?>
 
     <form action="create.php" method="POST">
