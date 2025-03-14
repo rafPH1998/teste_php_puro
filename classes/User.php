@@ -11,7 +11,7 @@ class User
     $this->conn = Database::getInstance()->getConnection();
   }
 
-  public function getAll()
+  public function getAll(): array
   {
     try {
       $pdo = $this->conn->query("SELECT * FROM users ORDER BY id DESC");
@@ -21,21 +21,21 @@ class User
     }
   }
 
-  public function getById(int $id)
+  public function getById(int $id): array|bool
   {
-    try {
-      $stmt = $this->conn->prepare("SELECT COUNT(*) FROM users WHERE id = ?");
-      $stmt->execute([$id]);
-      if ($stmt->fetchColumn() == 0) {
-        return ["error" => "User with ID {$id} does not exist."];
+      try {
+          $pdo = $this->conn->prepare("SELECT * FROM users WHERE id = ?");
+          $pdo->execute([$id]);
+          $user = $pdo->fetch(PDO::FETCH_ASSOC);
+  
+          if (!$user) {
+              return false;
+          }
+  
+          return $user;
+      } catch (PDOException $e) {
+          return ["error" => "Falha ao buscar usuario: " . $e->getMessage()];
       }
-
-      $pdo = $this->conn->prepare("SELECT * FROM users WHERE id = ?");
-      $pdo->execute([$id]);
-      return $pdo->fetch(PDO::FETCH_ASSOC);
-    } catch (PDOException $e) {
-      return ["error" => "Falha ao buscar usuario: " . $e->getMessage()];
-    }
   }
 
   public function create(string $name, string $email)

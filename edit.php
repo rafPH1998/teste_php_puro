@@ -2,6 +2,10 @@
 require_once "classes/User.php";
 $userModel = new User();
 $user = $userModel->getById($_GET["id"]);
+
+if ($user === false) {
+    header("Location: index.php");
+}
 ?>
 
 <!DOCTYPE html>

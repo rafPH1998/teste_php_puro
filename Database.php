@@ -15,7 +15,8 @@ class Database {
       $this->pdo = new PDO("mysql:dbname={$this->db_name};host={$this->db_host};port={$this->db_port}", $this->db_user, $this->db_pass);
       $this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     } catch (PDOException $e) {
-      die("Erro ao conectar ao banco de dados: " . $e->getMessage());
+      var_dump($e->getMessage());
+      //die("Erro ao conectar ao banco de dados: " . $e->getMessage());
     }
   }
 
