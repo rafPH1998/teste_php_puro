@@ -3,13 +3,13 @@ require_once __DIR__ . '/classes/User.php';
 require __DIR__ . '/controllers/UserController.php';
 
 $user = new User();
-$controller = new UserController($user);
+$userController = new UserController($user);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $errors = null;
 
     if (isset($_POST["create"])) {
-        $result = $controller->create($_POST);
+        $result = $userController->create($_POST);
 
         if ($result === true) {
             header("Location: index.php");

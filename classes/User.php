@@ -49,18 +49,22 @@ class User
     }
   }
 
-  public function update(int $id, string $name, string $email)
+  public function update(int $id, string $name, string $email): bool|array
   {
     try {
       $stmt = $this->conn->prepare("SELECT COUNT(*) FROM users WHERE id = ?");
       $stmt->execute([$id]);
       if ($stmt->fetchColumn() == 0) {
-        return ["error" => "User with ID {$id} does not exist."];
+        return ["error" => false];
       }
 
-      $pdo = $this->conn->prepare("UPDATE users SET name = ?, email = ? WHERE id = ?");
-      $pdo->execute([$name, $email, $id]);
-      return ["success" => "User updated successfully"];
+      $pdo = $this->conn->prepare("UPDATE users SET name = :name, email = :email WHERE id = :id");
+      $pdo->bindValue(':name', $name, PDO::PARAM_STR);
+      $pdo->bindValue(':email', $email, PDO::PARAM_STR);
+      $pdo->bindValue(':id', $id, PDO::PARAM_INT);
+      $pdo->execute();
+      
+      return ["success" => true];
     } catch (PDOException $e) {
       return ["error" => "Failed to update user: " . $e->getMessage()];
     }

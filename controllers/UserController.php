@@ -31,25 +31,38 @@ class UserController
         }
     }
 
-
-    public function update($data) {
-        $validationErrors = $this->validate($data);
-        if (!empty($validationErrors)) {
-            return $validationErrors;
+    public function update(array $data): bool
+    {
+        try {
+            $validationErrors = $this->validate($data);
+    
+            if (!empty($validationErrors)) {
+                $_SESSION['errors'] = $validationErrors;
+                return false;
+            }
+    
+            $this->user->update($data['id'], $data['name'], $data['email']);
+    
+            $_SESSION['success'] = "Usuário atualizado com sucesso!";
+    
+            return true;
+    
+        } catch (Exception $e) {
+            $_SESSION['errors'] = ["Erro ao atualizar o usuário: " . $e->getMessage()];
+            return false;
         }
-
-        $this->user->update($data['id'], $data['name'], $data['email']);
-        return null;
     }
-
-    public function delete(int $id) {
+    
+    public function delete(int $id): bool|array
+    {
         if (empty($id) || !is_numeric($id)) {
             return ["ID inválido para exclusão."];
         }
 
-        // Chama a função de exclusão
+        
         $this->user->delete($id);
-        return null;
+        $_SESSION['success-delete'] = "Usuário deletado com sucesso!";
+        return true;
     }
 
     public function validate(array $data): array

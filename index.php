@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once "classes/User.php";
 $users = (new User())->getAll();
 ?>
@@ -12,6 +13,23 @@ $users = (new User())->getAll();
 </head>
 <body>
     <h2>Lista de Usuários</h2>
+
+    <?php if (isset($_SESSION['success'])): ?>
+        <div class="alert alert-success">
+            <?= htmlspecialchars($_SESSION['success']) ?> 
+            <a href="index.php">Apagar mensagem</a>
+        </div>
+        <?php unset($_SESSION['success']); ?>
+    <?php endif; ?>
+
+    <?php if (isset($_SESSION['success-delete'])): ?>
+        <div class="alert alert-success">
+            <?= htmlspecialchars($_SESSION['success-delete']) ?> 
+            <a href="index.php">Apagar mensagem</a>
+        </div>
+        <?php unset($_SESSION['success-delete']); ?>
+    <?php endif; ?>
+    
     <a href="create.php">Adicionar Usuário</a>
     <table>
         <tr>
